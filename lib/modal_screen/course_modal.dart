@@ -38,6 +38,8 @@ class _CourseModalState extends State<CourseModal> {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                             'New Course *${_textController.text}* saved in DB')));
+
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text('Add new Course'))
