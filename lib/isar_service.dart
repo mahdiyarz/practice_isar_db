@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:isar/isar.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:practice_isar_db/entities/course.dart';
 import 'package:practice_isar_db/entities/student.dart';
@@ -38,37 +39,31 @@ class IsarService {
 
   Future<void> createBackUp() async {
     final isar = await db;
-    Directory directory = Directory('');
+    final backUpDir = await getApplicationSupportDirectory();
 
-    if (Platform.isAndroid) {
-      directory = Directory('/storage/emulated/0/Download');
-    } else {
-      directory = await getDownloadsDirectory() ??
-          await getApplicationDocumentsDirectory();
+    final File backUpFile = File('${backUpDir.path}/backup_db.isar');
+    if (await backUpFile.exists()) {
+      await backUpFile.delete();
     }
 
-    final dir = await getTemporaryDirectory();
-
-    await isar.copyToFile('${directory.path}/backup_db.isar');
+    await isar.copyToFile('${backUpDir.path}/backup_db.isar');
   }
 
-  // Future<void> restoreDB() async {
-  //   // final isar = await db;
-  //   // await isar.close();
+  Future<void> restoreDB() async {
+    final isar = await db;
+    final dbDirectory = await getApplicationDocumentsDirectory();
 
-  //   Directory directory = Directory('');
-  //   directory = Directory('/storage/emulated/0/Download');
+    final Directory backupDirectory = await getApplicationSupportDirectory();
 
-  //   await Isar.open(
-  //     [
-  //       CourseSchema,
-  //       StudentSchema,
-  //       TeacherSchema,
-  //     ],
-  //     directory: directory.path,
-  //     inspector: true,
-  //   );
-  // }
+    await isar.close();
+
+    final dbFile = File('${backupDirectory.path}/backup_db.isar');
+    final dbPath = p.join(dbDirectory.path, 'default.isar');
+
+    if (await dbFile.exists()) {
+      await dbFile.copy(dbPath);
+    }
+  }
 
   Future<void> saveCourse(Course newCourse) async {
     final isar = await db;

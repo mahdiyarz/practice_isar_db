@@ -30,10 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () => service.createBackUp(),
             icon: const Icon(Icons.backup),
           ),
-          // IconButton(
-          //   onPressed: () => service.restoreDB(),
-          //   icon: const Icon(Icons.restart_alt),
-          // ),
+          IconButton(
+            onPressed: () => service.restoreDB(),
+            icon: const Icon(Icons.restart_alt),
+          ),
         ],
       ),
       body: Column(
