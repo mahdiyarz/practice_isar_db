@@ -5,7 +5,8 @@ import '../isar_service.dart';
 
 class CourseModal extends StatefulWidget {
   final IsarService isarService;
-  const CourseModal({required this.isarService, super.key});
+  final Course? editedCourse;
+  const CourseModal({required this.isarService, this.editedCourse, super.key});
 
   @override
   State<CourseModal> createState() => _CourseModalState();
@@ -33,8 +34,11 @@ class _CourseModalState extends State<CourseModal> {
             ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    widget.isarService
-                        .saveCourse(Course()..title = _textController.text);
+                    widget.editedCourse != null
+                        ? widget.isarService.saveCourse(
+                            widget.editedCourse!..title = _textController.text)
+                        : widget.isarService
+                            .saveCourse(Course()..title = _textController.text);
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                             'New Course *${_textController.text}* saved in DB')));

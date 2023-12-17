@@ -4,6 +4,7 @@ import 'package:practice_isar_db/isar_service.dart';
 import 'entities/course.dart';
 import 'entities/student.dart';
 import 'entities/teacher.dart';
+import 'modal_screen/course_modal.dart';
 
 class CourseDetailScreen extends StatelessWidget {
   final IsarService isarService;
@@ -17,7 +18,24 @@ class CourseDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(course.title)),
+      appBar: AppBar(
+        title: Text(course.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return CourseModal(
+                      isarService: isarService,
+                      editedCourse: course,
+                    );
+                  },
+                );
+              },
+              icon: const Icon(Icons.edit))
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
